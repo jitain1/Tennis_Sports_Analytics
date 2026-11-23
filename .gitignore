@@ -1,0 +1,14 @@
+﻿.venv/
+__pycache__/
+*.pyc
+.env
+.env
+.venv/
+__pycache__/
+*.pyc
+*.db
+*.sqlite
+*.sqlite3
+backup_*/
+api_backup_before_fix.py
+.streamlit/secrets.toml
