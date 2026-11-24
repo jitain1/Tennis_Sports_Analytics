@@ -4,17 +4,17 @@
 
 
 
-\*\*Project:\*\* Tennis Sports Analytics  
+**Project:** Tennis Sports Analytics  
 
-\*\*Database:\*\* MySQL 8.0  
+**Database:** MySQL 8.0  
 
-\*\*Backend:\*\* FastAPI  
+**Backend:** FastAPI  
 
-\*\*Frontend:\*\* Streamlit  
+**Frontend:** Streamlit  
 
-\*\*Data Provider:\*\* SportRadar Tennis API  
+**Data Provider:** SportRadar Tennis API  
 
-\*\*Language:\*\* Python
+**Language:** Python
 
 
 
@@ -42,17 +42,17 @@ The project follows a layered architecture:
 
 
 
-1\. \*\*Data Source:\*\* SportRadar Tennis API.
+1\. **Data Source:** SportRadar Tennis API.
 
-2\. \*\*Extraction:\*\* Python Requests library retrieves API responses.
+2\. **Extraction:** Python Requests library retrieves API responses.
 
-3\. \*\*Transformation:\*\* JSON fields are mapped into relational records.
+3\. **Transformation:** JSON fields are mapped into relational records.
 
-4\. \*\*Storage:\*\* MySQL stores structured data.
+4\. **Storage:** MySQL stores structured data.
 
-5\. \*\*Backend:\*\* FastAPI exposes database information through REST endpoints.
+5\. **Backend:** FastAPI exposes database information through REST endpoints.
 
-6\. \*\*Presentation:\*\* Streamlit displays metrics, tables, charts and analytics.
+6\. **Presentation:** Streamlit displays metrics, tables, charts and analytics.
 
 
 
@@ -126,7 +126,7 @@ Purpose:
 
 Endpoint:
 
-`double\_competitors\_rankings.json`
+`double_competitors_rankings.json`
 
 
 
@@ -178,7 +178,7 @@ The integration handles:
 
 
 
-Implementation file: `scripts/sync\_sportradar.py`
+Implementation file: `scripts/sync_sportradar.py`
 
 
 
@@ -216,7 +216,7 @@ The synchronization uses database upsert operations where appropriate to avoid u
 
 
 
-Database name: `tennis\_analytics`
+Database name: `tennis_analytics`
 
 
 
@@ -234,7 +234,7 @@ Six relational tables are implemented:
 
 \- competitors
 
-\- competitor\_rankings
+\- competitor_rankings
 
 
 
@@ -242,7 +242,7 @@ Primary keys identify records, while foreign keys maintain relationships between
 
 
 
-Detailed table structures and relationships are documented in `DATABASE\_SCHEMA.md`.
+Detailed table structures and relationships are documented in `DATABASE_SCHEMA.md`.
 
 
 
@@ -288,7 +288,7 @@ Implemented endpoints:
 
 | `/venues` | Venue information |
 
-| `/analytics/{query\_id}` | SQL analytics |
+| `/analytics/{query_id}` | SQL analytics |
 
 
 
@@ -344,7 +344,7 @@ The dashboard retrieves information through the FastAPI backend.
 
 
 
-Implementation file: `sql/analytics\_queries.sql`
+Implementation file: `sql/analytics_queries.sql`
 
 
 
@@ -424,7 +424,7 @@ Verified database snapshot on November 24, 2026:
 
 | Competitor Rankings | 1,000 |
 
-| \*\*Total\*\* | \*\*13,750\*\* |
+| **Total** | **13,750** |
 
 
 
@@ -448,7 +448,7 @@ Backup location:
 
 
 
-`backup\_analytics\_20261123\_234828/before\_sportradar\_20261124\_120033.json`
+`backup_analytics_20261123_234828/before_sportradar_20261124_120033.json`
 
 
 
@@ -462,51 +462,51 @@ The cleanup script uses database transactions and rolls back changes if an error
 
 \### API Connectivity
 
-\*\*Challenge:\*\* API connectivity was initially unavailable on the previous network.
+**Challenge:** API connectivity was initially unavailable on the previous network.
 
 
 
-\*\*Solution:\*\* API access was verified using a working mobile hotspot connection.
+**Solution:** API access was verified using a working mobile hotspot connection.
 
 
 
 \### API Authentication
 
-\*\*Challenge:\*\* Securely configuring API authentication.
+**Challenge:** Securely configuring API authentication.
 
 
 
-\*\*Solution:\*\* The API key was stored in `.env` and supplied through the required HTTP header.
+**Solution:** The API key was stored in `.env` and supplied through the required HTTP header.
 
 
 
 \### Database Integration
 
-\*\*Challenge:\*\* Mapping nested JSON records into relational tables.
+**Challenge:** Mapping nested JSON records into relational tables.
 
 
 
-\*\*Solution:\*\* Separate synchronization functions were implemented for categories, competitions, complexes, venues, competitors and rankings.
+**Solution:** Separate synchronization functions were implemented for categories, competitions, complexes, venues, competitors and rankings.
 
 
 
 \### Python Module Resolution
 
-\*\*Challenge:\*\* The synchronization script initially could not locate the root-level `api.py` module.
+**Challenge:** The synchronization script initially could not locate the root-level `api.py` module.
 
 
 
-\*\*Solution:\*\* The project root was added to `PYTHONPATH` when executing the script.
+**Solution:** The project root was added to `PYTHONPATH` when executing the script.
 
 
 
 \### Sample Data Removal
 
-\*\*Challenge:\*\* The initial database contained sample records.
+**Challenge:** The initial database contained sample records.
 
 
 
-\*\*Solution:\*\* A cleanup script verified the SportRadar identifiers and removed non-API records while preserving the database schema.
+**Solution:** A cleanup script verified the SportRadar identifiers and removed non-API records while preserving the database schema.
 
 
 
@@ -557,4 +557,3 @@ The project successfully integrates SportRadar tennis reference and ranking feed
 
 
 The implementation demonstrates API integration, JSON processing, database design, SQL analytics, backend development and dashboard visualization.
-

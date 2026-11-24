@@ -4,9 +4,9 @@
 
 
 
-\*\*Database Name:\*\* `tennis\_analytics`  
+**Database Name:** `tennis_analytics`  
 
-\*\*Database Engine:\*\* MySQL 8.0
+**Database Engine:** MySQL 8.0
 
 
 
@@ -32,7 +32,7 @@ It contains six tables:
 
 5\. competitors
 
-6\. competitor\_rankings
+6\. competitor_rankings
 
 
 
@@ -54,7 +54,7 @@ competitions
 
 &#x20;   |
 
-&#x20;   | parent\_id (self-reference)
+&#x20;   | parent_id (self-reference)
 
 &#x20;   |
 
@@ -82,7 +82,7 @@ competitors
 
 &#x20;   |
 
-competitor\_rankings
+competitor_rankings
 
 ```
 
@@ -104,9 +104,9 @@ Stores competition categories.
 
 |---|---|---|
 
-| category\_id | VARCHAR(50) | Primary Key |
+| category_id | VARCHAR(50) | Primary Key |
 
-| category\_name | VARCHAR(100) | NOT NULL |
+| category_name | VARCHAR(100) | NOT NULL |
 
 
 
@@ -122,33 +122,33 @@ Stores tennis competition information.
 
 |---|---|---|
 
-| competition\_id | VARCHAR(50) | Primary Key |
+| competition_id | VARCHAR(50) | Primary Key |
 
-| competition\_name | VARCHAR(100) | NOT NULL |
+| competition_name | VARCHAR(100) | NOT NULL |
 
-| parent\_id | VARCHAR(50) | NULL allowed |
+| parent_id | VARCHAR(50) | NULL allowed |
 
 | type | VARCHAR(20) | NOT NULL |
 
 | gender | VARCHAR(10) | NOT NULL |
 
-| category\_id | VARCHAR(50) | Foreign Key |
+| category_id | VARCHAR(50) | Foreign Key |
 
 
 
 Relationship:
 
-\- `category\_id` references `categories.category\_id`.
+\- `category_id` references `categories.category_id`.
 
-\- `parent\_id` stores the parent competition identifier where available.
+\- `parent_id` stores the parent competition identifier where available.
 
 
 
 Indexes:
 
-\- `idx\_competitions\_category`
+\- `idx_competitions_category`
 
-\- `idx\_competitions\_parent`
+\- `idx_competitions_parent`
 
 
 
@@ -164,9 +164,9 @@ Stores sports complex information.
 
 |---|---|---|
 
-| complex\_id | VARCHAR(50) | Primary Key |
+| complex_id | VARCHAR(50) | Primary Key |
 
-| complex\_name | VARCHAR(100) | NOT NULL |
+| complex_name | VARCHAR(100) | NOT NULL |
 
 
 
@@ -182,31 +182,31 @@ Stores venue information associated with complexes.
 
 |---|---|---|
 
-| venue\_id | VARCHAR(50) | Primary Key |
+| venue_id | VARCHAR(50) | Primary Key |
 
-| venue\_name | VARCHAR(100) | NOT NULL |
+| venue_name | VARCHAR(100) | NOT NULL |
 
-| city\_name | VARCHAR(100) | NOT NULL |
+| city_name | VARCHAR(100) | NOT NULL |
 
-| country\_name | VARCHAR(100) | NOT NULL |
+| country_name | VARCHAR(100) | NOT NULL |
 
-| country\_code | CHAR(3) | NOT NULL |
+| country_code | CHAR(3) | NOT NULL |
 
 | timezone | VARCHAR(100) | NOT NULL |
 
-| complex\_id | VARCHAR(50) | Foreign Key |
+| complex_id | VARCHAR(50) | Foreign Key |
 
 
 
 Relationship:
 
-\- `complex\_id` references `complexes.complex\_id`.
+\- `complex_id` references `complexes.complex_id`.
 
 
 
 Index:
 
-\- `idx\_venues\_complex`
+\- `idx_venues_complex`
 
 
 
@@ -222,19 +222,19 @@ Stores competitor details.
 
 |---|---|---|
 
-| competitor\_id | VARCHAR(50) | Primary Key |
+| competitor_id | VARCHAR(50) | Primary Key |
 
 | name | VARCHAR(150) | NOT NULL |
 
 | country | VARCHAR(100) | NULL allowed |
 
-| country\_code | CHAR(3) | NULL allowed |
+| country_code | CHAR(3) | NULL allowed |
 
 | abbreviation | VARCHAR(10) | NULL allowed |
 
 
 
-\### 3.6 competitor\_rankings
+\### 3.6 competitor_rankings
 
 
 
@@ -246,15 +246,15 @@ Stores competitor ranking information.
 
 |---|---|---|
 
-| rank\_id | INT | Primary Key, AUTO\_INCREMENT |
+| rank_id | INT | Primary Key, AUTO_INCREMENT |
 
-| competitor\_id | VARCHAR(50) | Foreign Key |
+| competitor_id | VARCHAR(50) | Foreign Key |
 
-| competitor\_name | VARCHAR(150) | NOT NULL |
+| competitor_name | VARCHAR(150) | NOT NULL |
 
 | country | VARCHAR(100) | NULL allowed |
 
-| country\_code | CHAR(3) | NULL allowed |
+| country_code | CHAR(3) | NULL allowed |
 
 | rank | INT | NOT NULL |
 
@@ -262,23 +262,23 @@ Stores competitor ranking information.
 
 | points | INT | NOT NULL, DEFAULT 0 |
 
-| competitions\_played | INT | NOT NULL, DEFAULT 0 |
+| competitions_played | INT | NOT NULL, DEFAULT 0 |
 
-| ranking\_date | DATE | NULL allowed |
+| ranking_date | DATE | NULL allowed |
 
 
 
 Relationship:
 
-\- `competitor\_id` references `competitors.competitor\_id`.
+\- `competitor_id` references `competitors.competitor_id`.
 
 
 
 Indexes:
 
-\- `idx\_rankings\_rank`
+\- `idx_rankings_rank`
 
-\- `fk\_rankings\_competitor`
+\- `fk_rankings_competitor`
 
 
 
@@ -294,7 +294,7 @@ Indexes:
 
 | complexes | venues | One-to-Many |
 
-| competitors | competitor\_rankings | One-to-Many |
+| competitors | competitor_rankings | One-to-Many |
 
 | competitions | competitions | Parent-Child reference |
 
@@ -344,7 +344,7 @@ Data is retrieved through the following SportRadar API feeds:
 
 | Complexes API | complexes, venues |
 
-| Doubles Competitor Rankings API | competitors, competitor\_rankings |
+| Doubles Competitor Rankings API | competitors, competitor_rankings |
 
 
 
@@ -370,9 +370,9 @@ As verified on November 24, 2026:
 
 | competitors | 1,000 |
 
-| competitor\_rankings | 1,000 |
+| competitor_rankings | 1,000 |
 
-| \*\*Total\*\* | \*\*13,750\*\* |
+| **Total** | **13,750** |
 
 
 
@@ -398,11 +398,10 @@ The `sql/` directory contains:
 
 \- `schema.sql` — database table definitions and relationships.
 
-\- `analytics\_queries.sql` — analytical SQL queries.
+\- `analytics_queries.sql` — analytical SQL queries.
 
-\- `load\_sample\_data.sql` — sample dataset for development and testing.
+\- `load_sample_data.sql` — sample dataset for development and testing.
 
 
 
 For the API-only production dataset, use the SportRadar synchronization script instead of loading sample data.
-

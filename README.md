@@ -70,7 +70,7 @@ SportRadar API → Python Data Synchronization → MySQL Database → FastAPI �
 
 
 
-The database is named `tennis\_analytics` and contains six tables:
+The database is named `tennis_analytics` and contains six tables:
 
 
 
@@ -88,9 +88,9 @@ The database is named `tennis\_analytics` and contains six tables:
 
 | competitors | 1,000 |
 
-| competitor\_rankings | 1,000 |
+| competitor_rankings | 1,000 |
 
-| \*\*Total\*\* | \*\*13,750\*\* |
+| **Total** | **13,750** |
 
 
 
@@ -104,7 +104,7 @@ These counts represent the verified database snapshot on November 24, 2026. Futu
 
 ```text
 
-Tennis\_Sports\_Analytics/
+Tennis_Sports_Analytics/
 
 │
 
@@ -126,9 +126,9 @@ Tennis\_Sports\_Analytics/
 
 ├── scripts/
 
-│   ├── sync\_sportradar.py
+│   ├── sync_sportradar.py
 
-│   └── cleanup\_sample\_data.py
+│   └── cleanup_sample_data.py
 
 │
 
@@ -136,17 +136,17 @@ Tennis\_Sports\_Analytics/
 
 │   ├── schema.sql
 
-│   ├── analytics\_queries.sql
+│   ├── analytics_queries.sql
 
-│   └── load\_sample\_data.sql
+│   └── load_sample_data.sql
 
 │
 
 ├── docs/
 
-│   ├── PROJECT\_DOCUMENTATION.md
+│   ├── PROJECT_DOCUMENTATION.md
 
-│   └── DATABASE\_SCHEMA.md
+│   └── DATABASE_SCHEMA.md
 
 │
 
@@ -154,7 +154,7 @@ Tennis\_Sports\_Analytics/
 
 ├── data/
 
-└── backup\_analytics/
+└── backup_analytics/
 
 ```
 
@@ -222,7 +222,7 @@ Available endpoints:
 
 \- `/venues`
 
-\- `/analytics/{query\_id}`
+\- `/analytics/{query_id}`
 
 
 
@@ -262,9 +262,9 @@ The dashboard provides:
 
 ```bash
 
-git clone https://github.com/jitain1/Tennis\_Sports\_Analytics.git
+git clone https://github.com/jitain1/Tennis_Sports_Analytics.git
 
-cd Tennis\_Sports\_Analytics
+cd Tennis_Sports_Analytics
 
 ```
 
@@ -320,15 +320,15 @@ Configure your own values:
 
 ```env
 
-SPORTRADAR\_API\_KEY=your\_api\_key
+SPORTRADAR_API_KEY=your_api_key
 
-DB\_HOST=localhost
+DB_HOST=localhost
 
-DB\_USER=root
+DB_USER=root
 
-DB\_PASSWORD=your\_mysql\_password
+DB_PASSWORD=your_mysql_password
 
-DB\_NAME=tennis\_analytics
+DB_NAME=tennis_analytics
 
 ```
 
@@ -348,7 +348,7 @@ Create the MySQL database:
 
 ```sql
 
-CREATE DATABASE tennis\_analytics;
+CREATE DATABASE tennis_analytics;
 
 ```
 
@@ -378,7 +378,7 @@ Run from the project root:
 
 $env:PYTHONPATH = (Get-Location).Path
 
-py scripts/sync\_sportradar.py
+py scripts/sync_sportradar.py
 
 ```
 
@@ -428,7 +428,7 @@ Open `http://127.0.0.1:8501` in your browser.
 
 
 
-The `sql/analytics\_queries.sql` file contains analytical queries for:
+The `sql/analytics_queries.sql` file contains analytical queries for:
 
 
 
@@ -452,7 +452,7 @@ The `sql/analytics\_queries.sql` file contains analytical queries for:
 
 
 
-The `scripts/cleanup\_sample\_data.py` script verifies IDs against the SportRadar feeds and removes records not present in the verified API snapshot.
+The `scripts/cleanup_sample_data.py` script verifies IDs against the SportRadar feeds and removes records not present in the verified API snapshot.
 
 
 
@@ -460,7 +460,7 @@ A database backup should always be taken before running cleanup operations.
 
 
 
-\*\*Important:\*\* `sql/load\_sample\_data.sql` is intended for sample-data setup and should not be executed when maintaining the API-only dataset.
+**Important:** `sql/load_sample_data.sql` is intended for sample-data setup and should not be executed when maintaining the API-only dataset.
 
 
 
@@ -468,9 +468,9 @@ A database backup should always be taken before running cleanup operations.
 
 
 
-\- `docs/PROJECT\_DOCUMENTATION.md` — implementation workflow, architecture, API integration and project insights.
+\- `docs/PROJECT_DOCUMENTATION.md` — implementation workflow, architecture, API integration and project insights.
 
-\- `docs/DATABASE\_SCHEMA.md` — database tables and relationships.
+\- `docs/DATABASE_SCHEMA.md` — database tables and relationships.
 
 
 
@@ -514,7 +514,7 @@ A database backup should always be taken before running cleanup operations.
 
 
 
-GitHub: https://github.com/jitain1/Tennis\_Sports\_Analytics
+GitHub: https://github.com/jitain1/Tennis_Sports_Analytics
 
 
 
@@ -527,4 +527,3 @@ Core API integration, MySQL data synchronization, FastAPI backend, SQL analytics
 
 
 Database snapshot verified on November 24, 2026.
-
