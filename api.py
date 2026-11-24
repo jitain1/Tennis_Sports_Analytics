@@ -27,13 +27,22 @@ def get_connection():
 
 def fetch_data(query, params=()):
     connection = None
+
     try:
         connection = get_connection()
-        with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+
+        with connection.cursor(
+            cursor_factory=RealDictCursor
+        ) as cursor:
             cursor.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
     finally:
         if connection:
             connection.close()
@@ -43,82 +52,89 @@ def fetch_data(query, params=()):
 def home():
     return {
         "message": "Tennis Sports Analytics API",
-        "status": "running"
+        "status": "running",
+        "database": "PostgreSQL"
     }
 
 
 @app.get("/health")
 def health():
+    connection = None
+
     try:
-        fetch_data("SELECT 1 AS database_status")
-        return {"api": "running", "database": "connected"}
+        connection = get_connection()
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+
+        return {
+            "api": "running",
+            "database": "connected"
+        }
+
     except Exception as e:
-        raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+    finally:
+        if connection:
+            connection.close()
 
 
 @app.get("/competitors")
-def competitors():
+def get_competitors(
+    limit: int = Query(default=1000, ge=1, le=10000)
+):
     return fetch_data(
-        """SELECT competitor_id, name, country,
-        country_code, abbreviation
-        FROM competitors ORDER BY name"""
+        "SELECT * FROM competitors LIMIT %s",
+        (limit,)
     )
 
 
 @app.get("/rankings")
-def rankings(
-    limit: int = Query(100, ge=1, le=1000),
-    offset: int = Query(0, ge=0)
+def get_rankings(
+    limit: int = Query(default=1000, ge=1, le=10000)
 ):
     return fetch_data(
-        """SELECT competitor_id, competitor_name, country,
-        country_code, rank, movement, points,
-        competitions_played, ranking_date
-        FROM competitor_rankings
-        ORDER BY rank ASC
-        LIMIT %s OFFSET %s""",
-        (limit, offset)
+        'SELECT * FROM competitor_rankings ORDER BY "rank" ASC LIMIT %s',
+        (limit,)
     )
 
 
 @app.get("/categories")
-def categories():
+def get_categories():
     return fetch_data(
-        "SELECT * FROM categories ORDER BY category_name"
+        "SELECT * FROM categories"
     )
 
 
 @app.get("/competitions")
-def competitions():
+def get_competitions():
     return fetch_data(
-        """SELECT c.*, cat.category_name
-        FROM competitions c
-        LEFT JOIN categories cat
-        ON c.category_id = cat.category_id
-        ORDER BY c.competition_name"""
+        "SELECT * FROM competitions"
     )
 
 
 @app.get("/venues")
-def venues():
+def get_venues():
     return fetch_data(
-        """SELECT v.*, cx.complex_name
-        FROM venues v
-        LEFT JOIN complexes cx
-        ON v.complex_id = cx.complex_id
-        ORDER BY v.venue_name"""
+        "SELECT * FROM venues"
     )
 
 
 @app.get("/analytics/{query_id}")
 def run_analytics(query_id: int):
+
     sql_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        "sql", "analytics_queries.sql"
+        "sql",
+        "analytics_queries.sql"
     )
 
     try:
-        with open(sql_path, encoding="utf-8") as f:
+        with open(sql_path, encoding="utf-8-sig") as f:
             sql = f.read()
 
         sql = "\n".join(
@@ -126,7 +142,12 @@ def run_analytics(query_id: int):
             if not line.strip().startswith("--")
         )
 
-        queries = [q.strip() for q in sql.split(";") if q.strip()]
+        queries = [
+            q.strip()
+            for q in sql.split(";")
+            if q.strip()
+            and q.strip().upper() != "USE TENNIS_ANALYTICS"
+        ]
 
         if query_id < 1 or query_id > len(queries):
             raise HTTPException(
@@ -134,7 +155,9 @@ def run_analytics(query_id: int):
                 detail="Invalid query ID"
             )
 
-        rows = fetch_data(queries[query_id - 1])
+        rows = fetch_data(
+            queries[query_id - 1]
+        )
 
         return {
             "query_id": query_id,
@@ -144,5 +167,9 @@ def run_analytics(query_id: int):
 
     except HTTPException:
         raise
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
