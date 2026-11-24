@@ -1,4 +1,4 @@
-USE tennis_analytics;
+﻿USE tennis_analytics;
 
 -- 01. Top 10 Competitors
 SELECT competitor_name, country, "rank", points
@@ -9,7 +9,7 @@ LIMIT 10;
 -- 02. Complete Player Rankings
 SELECT *
 FROM competitor_rankings
-ORDER BY `rank` ASC;
+ORDER BY "rank" ASC;
 
 -- 03. Country-wise Competitor Count
 SELECT country, COUNT(*) AS total_competitors
@@ -30,7 +30,7 @@ GROUP BY country
 ORDER BY total_points DESC;
 
 -- 06. Best Ranking by Country
-SELECT country, MIN(`rank`) AS best_rank
+SELECT country, MIN("rank") AS best_rank
 FROM competitor_rankings
 GROUP BY country
 ORDER BY best_rank ASC;
@@ -45,15 +45,15 @@ ORDER BY movement DESC;
 -- 08. Ranking Distribution
 SELECT
     CASE
-        WHEN `rank` BETWEEN 1 AND 10 THEN 'Top 10'
-        WHEN `rank` BETWEEN 11 AND 50 THEN '11-50'
-        WHEN `rank` BETWEEN 51 AND 100 THEN '51-100'
+        WHEN "rank" BETWEEN 1 AND 10 THEN 'Top 10'
+        WHEN "rank" BETWEEN 11 AND 50 THEN '11-50'
+        WHEN "rank" BETWEEN 51 AND 100 THEN '51-100'
         ELSE 'Above 100'
     END AS ranking_group,
     COUNT(*) AS total_players
 FROM competitor_rankings
 GROUP BY ranking_group
-ORDER BY MIN(`rank`);
+ORDER BY MIN("rank");
 
 -- 09. Competitor Country Details
 SELECT country, country_code,
@@ -128,17 +128,17 @@ GROUP BY ranking_date
 ORDER BY ranking_date DESC;
 
 -- 19. Top 3 Competitors Per Country
-SELECT country, competitor_name, `rank`, points
+SELECT country, competitor_name, "rank", points
 FROM (
-    SELECT country, competitor_name, `rank`, points,
+    SELECT country, competitor_name, "rank", points,
            ROW_NUMBER() OVER (
                PARTITION BY country
-               ORDER BY `rank` ASC
+               ORDER BY "rank" ASC
            ) AS row_num
     FROM competitor_rankings
 ) ranked
 WHERE row_num <= 3
-ORDER BY country, `rank`;
+ORDER BY country, "rank";
 
 -- 20. Competitors Without Ranking Records
 SELECT c.competitor_id, c.name, c.country
