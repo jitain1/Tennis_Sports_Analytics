@@ -1,5 +1,7 @@
+
 import os
-import pymysql
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
 
@@ -10,33 +12,40 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 def get_connection():
-    return pymysql.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=int(os.getenv("DB_PORT", "3306")),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", ""),
-        database=os.getenv("DB_NAME", "tennis_analytics"),
-        cursorclass=pymysql.cursors.DictCursor,
-        connect_timeout=10
+    return psycopg2.connect(
+        host=os.getenv("PG_HOST"),
+        port=int(os.getenv("PG_PORT", "5432")),
+        user=os.getenv("PG_USER"),
+        password=os.getenv("PG_PASSWORD"),
+        dbname=os.getenv("PG_DATABASE", "defaultdb"),
+        sslmode=os.getenv("PG_SSLMODE", "require"),
+        connect_timeout=15
     )
+
 
 def fetch_data(query, params=()):
     connection = None
     try:
         connection = get_connection()
-        with connection.cursor() as cursor:
+        with connection.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(query, params)
-            return cursor.fetchall()
+            return [dict(row) for row in cursor.fetchall()]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         if connection:
             connection.close()
 
+
 @app.get("/")
 def home():
-    return {"message": "Tennis Sports Analytics API", "status": "running"}
+    return {
+        "message": "Tennis Sports Analytics API",
+        "status": "running"
+    }
+
 
 @app.get("/health")
 def health():
@@ -46,11 +55,15 @@ def health():
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e))
 
+
 @app.get("/competitors")
 def competitors():
     return fetch_data(
-        "SELECT competitor_id, name, country, country_code, abbreviation FROM competitors ORDER BY name"
+        """SELECT competitor_id, name, country,
+        country_code, abbreviation
+        FROM competitors ORDER BY name"""
     )
+
 
 @app.get("/rankings")
 def rankings(
@@ -59,19 +72,21 @@ def rankings(
 ):
     return fetch_data(
         """SELECT competitor_id, competitor_name, country,
-        country_code, `rank`, movement, points,
+        country_code, rank, movement, points,
         competitions_played, ranking_date
         FROM competitor_rankings
-        ORDER BY `rank` ASC
+        ORDER BY rank ASC
         LIMIT %s OFFSET %s""",
         (limit, offset)
     )
+
 
 @app.get("/categories")
 def categories():
     return fetch_data(
         "SELECT * FROM categories ORDER BY category_name"
     )
+
 
 @app.get("/competitions")
 def competitions():
@@ -83,6 +98,7 @@ def competitions():
         ORDER BY c.competition_name"""
     )
 
+
 @app.get("/venues")
 def venues():
     return fetch_data(
@@ -93,43 +109,40 @@ def venues():
         ORDER BY v.venue_name"""
     )
 
-# SQL Analytics Endpoint
+
 @app.get("/analytics/{query_id}")
 def run_analytics(query_id: int):
-    import os
-
     sql_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         "sql", "analytics_queries.sql"
     )
 
-    with open(sql_path, encoding="utf-8") as f:
-        sql = f.read()
-
-    sql = "\n".join(
-        line for line in sql.splitlines()
-        if not line.strip().startswith("--")
-    )
-
-    queries = [q.strip() for q in sql.split(";") if q.strip()]
-
-    if query_id < 1 or query_id > len(queries):
-        raise HTTPException(status_code=404, detail="Invalid query ID")
-
-    connection = None
     try:
-        connection = get_connection()
-        with connection.cursor() as cursor:
-            cursor.execute(queries[query_id - 1])
-            rows = cursor.fetchall()
-            return {
-                "query_id": query_id,
-                "total_records": len(rows),
-                "data": rows
-            }
+        with open(sql_path, encoding="utf-8") as f:
+            sql = f.read()
+
+        sql = "\n".join(
+            line for line in sql.splitlines()
+            if not line.strip().startswith("--")
+        )
+
+        queries = [q.strip() for q in sql.split(";") if q.strip()]
+
+        if query_id < 1 or query_id > len(queries):
+            raise HTTPException(
+                status_code=404,
+                detail="Invalid query ID"
+            )
+
+        rows = fetch_data(queries[query_id - 1])
+
+        return {
+            "query_id": query_id,
+            "total_records": len(rows),
+            "data": rows
+        }
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if connection:
-            connection.close()
-
