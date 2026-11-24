@@ -3,7 +3,7 @@ USE tennis_analytics;
 -- 01. Top 10 Competitors
 SELECT competitor_name, country, `rank`, points
 FROM competitor_rankings
-ORDER BY `rank` ASC
+ORDER BY rank ASC
 LIMIT 10;
 
 -- 02. Complete Player Rankings
