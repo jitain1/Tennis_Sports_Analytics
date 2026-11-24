@@ -1,5 +1,4 @@
-﻿USE tennis_analytics;
-
+﻿
 -- 01. Top 10 Competitors
 SELECT competitor_name, country, "rank", points
 FROM competitor_rankings
@@ -162,3 +161,4 @@ SELECT
     (SELECT COUNT(*) FROM competitions) AS total_competitions,
     (SELECT COUNT(*) FROM venues) AS total_venues,
     (SELECT COUNT(*) FROM complexes) AS total_complexes;
+
