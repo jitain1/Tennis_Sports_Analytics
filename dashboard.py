@@ -1,4 +1,4 @@
-﻿import streamlit as st
+import streamlit as st
 import pandas as pd
 import requests
 
@@ -24,7 +24,7 @@ try:
     st.success("API and MySQL Database Connected")
 
     competitors = get_data("competitors")
-    rankings = get_data("rankings")
+    rankings = get_data("rankings?limit=1000")
     competitions = get_data("competitions")
     venues = get_data("venues")
 
@@ -50,9 +50,10 @@ try:
     if page == "Overview":
         st.subheader("Top 10 Player Rankings")
         df = pd.DataFrame(rankings)
-        st.dataframe(df, use_container_width=True, hide_index=True)
-
         if not df.empty:
+            df = df.sort_values("rank", ascending=True).head(10)
+            st.dataframe(df, use_container_width=True, hide_index=True)
+
             st.subheader("Ranking Points")
             st.bar_chart(
                 df.set_index("competitor_name")["points"]

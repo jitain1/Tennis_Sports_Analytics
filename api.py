@@ -1,4 +1,4 @@
-﻿import os
+import os
 import pymysql
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
@@ -54,7 +54,7 @@ def competitors():
 
 @app.get("/rankings")
 def rankings(
-    limit: int = Query(100, ge=1, le=500),
+    limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0)
 ):
     return fetch_data(
